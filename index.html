@@ -3,125 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>田中クイズ</title>
+  <title>Tanaka Quiz ✨</title>
   <style>
-    /* 画面全体の背景：やわらかいグラデ */
+    /* ------------------------------
+       全体スタイル
+    ------------------------------ */
     body {
       font-family: "Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
-      min-height: 100vh;
       margin: 0;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       padding: 40px 16px;
-      background: radial-gradient(circle at 20% 20%, #fff7f7 0%, #ffeefc 30%, #f4f7ff 60%, #eef5ff 100%);
+      background: linear-gradient(160deg, #c8d8e7 0%, #dce7f2 40%, #eaf0f6 100%);
       color: #2a2a2a;
     }
 
-    /* 中央カード：ガラス風＋ふわっと影 */
     .card {
       width: 100%;
       max-width: 480px;
-      background: rgba(255,255,255,0.5);
-      border-radius: 20px;
-      padding: 28px 24px 32px;
-      box-shadow:
-        0 30px 60px rgba(0,0,0,0.08),
-        0 2px 4px rgba(0,0,0,0.06);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.45);
+      border-radius: 24px;
+      padding: 28px 24px 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255,255,255,0.6);
-      position: relative;
     }
 
-    /* ちょっとした上部アクセントの細フチ */
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      padding: 1px;
-      background: linear-gradient(
-        135deg,
-        rgba(255,255,255,0.8) 0%,
-        rgba(255,255,255,0) 60%
-      );
-      -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-              mask-composite: exclude;
-      pointer-events: none;
-    }
-
+    /* ------------------------------
+       ヘッダー部分
+    ------------------------------ */
     header {
       text-align: center;
       margin-bottom: 24px;
+      position: relative;
+    }
+
+    /* キラキラのアニメ背景 */
+    header::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(45deg, #c7dfff, #f7dfff, #dfffe8, #fff);
+      background-size: 300% 300%;
+      animation: shimmer 6s infinite linear;
+      border-radius: 20px;
+      z-index: -1;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     h1 {
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-size: 1.4rem;
+      font-weight: 700;
       color: #1a1a1a;
       margin: 0 0 6px;
-      letter-spacing: .03em;
+      letter-spacing: .05em;
+      text-shadow: 0 0 10px rgba(255,255,255,0.7);
     }
 
     .subtitle {
-      font-size: .8rem;
-      color: #6b6b6b;
-      line-height: 1.5;
-      margin: 0;
+      font-size: .85rem;
+      color: #5c6a7c;
+      margin-bottom: 16px;
     }
 
-    section {
-      margin-bottom: 28px;
-    }
-
-    /* 見出しラベルっぽいデザイン */
-    .section-title {
-      font-size: .75rem;
-      font-weight: 600;
-      color: #777;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .section-title::before {
-      content: "";
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      background: linear-gradient(135deg,#ff86b5 0%,#a98bff 100%);
+    /* ------------------------------
+       丸アイコン
+    ------------------------------ */
+    .icon {
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
-      box-shadow: 0 4px 8px rgba(255,134,181,0.4);
+      overflow: hidden;
+      margin: 0 auto 10px;
+      border: 3px solid rgba(255,255,255,0.7);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
     }
 
-    /* 自己紹介ボックス */
-    .profile-box {
-      background: rgba(255,255,255,0.7);
+    .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ------------------------------
+       プロフィール・クイズ部分
+    ------------------------------ */
+    .section-title {
+      font-size: .8rem;
+      font-weight: 600;
+      color: #668;
+      letter-spacing: .05em;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .profile-box, .question-block {
+      background: rgba(255, 255, 255, 0.65);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.04);
       padding: 16px 18px;
-      font-size: .9rem;
-      line-height: 1.5;
-      color: #2f2f2f;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     }
 
     .profile-row {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .profile-label {
-      font-size: .7rem;
+      font-size: .75rem;
       font-weight: 600;
-      color: #868686;
-      letter-spacing: .04em;
-      margin-bottom: 2px;
+      color: #708090;
     }
     .profile-value {
       font-size: .95rem;
@@ -129,231 +127,181 @@
       color: #2a2a2a;
     }
 
-    /* 質問ボックス */
-    .question-block {
-      background: rgba(255,255,255,0.7);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.05);
-      padding: 16px 18px;
-      margin-bottom: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .question-block.done {
-      opacity: .8;
-    }
-
     .q-text {
-      font-size: .95rem;
       font-weight: 600;
-      color: #1f1f1f;
-      margin-bottom: 12px;
-      line-height: 1.4;
-      display: flex;
-      align-items: baseline;
-      gap: .5em;
-    }
-
-    .q-badge {
-      background: linear-gradient(135deg,#ff86b5 0%,#a98bff 100%);
-      color: #fff;
-      font-size: .7rem;
-      font-weight: 600;
-      line-height: 1;
-      padding: 4px 8px;
-      border-radius: 999px;
-      box-shadow: 0 8px 16px rgba(169,139,255,0.4);
-      white-space: nowrap;
+      margin-bottom: 8px;
     }
 
     .choices button {
+      display: block;
       width: 100%;
-      background: #fcfcfc;
-      border-radius: 12px;
-      border: 1px solid #dcdcdc;
-      padding: 10px 12px;
-      margin-bottom: 8px;
+      background: #f5f8fa;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 6px;
       font-size: .9rem;
-      font-weight: 500;
-      line-height: 1.4;
-      text-align: left;
       cursor: pointer;
-      color: #2a2a2a;
-      transition: all .15s ease;
+      transition: all .2s ease;
     }
-
     .choices button:hover {
-      box-shadow: 0 8px 20px rgba(0,0,0,0.07);
-      background: #ffffff;
+      background: #e7eef7;
     }
-
-    /* 正解・不正解のビジュアル */
     .choices button.correct {
-      background: #ecfff4;
-      border-color: #49c679;
-      box-shadow: 0 8px 20px rgba(73,198,121,0.25);
+      background: #e0f8ec;
+      border-color: #69c38c;
     }
     .choices button.wrong {
-      background: #fff5f7;
-      border-color: #e55a7a;
-      box-shadow: 0 8px 20px rgba(229,90,122,0.22);
+      background: #fce5e8;
+      border-color: #d0708c;
     }
 
     .result-area {
-      font-size: .8rem;
+      font-size: .85rem;
       font-weight: 600;
       min-height: 1.4em;
-      margin-top: 8px;
-      line-height: 1.4;
+      margin-top: 6px;
     }
 
-    /* スコア表示 */
     #final-wrapper {
       display: none;
-      background: rgba(0,0,0,0.8);
-      color: #fff;
-      border-radius: 16px;
-      padding: 16px 18px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 14px;
+      padding: 12px;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      margin-top: 10px;
     }
-
     #final-score {
+      font-weight: 700;
       font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-    #final-msg {
-      font-size: .8rem;
-      color: #d2d2d2;
-      line-height: 1.4;
+      color: #2a2a2a;
     }
 
     .restart-btn {
       display: none;
       width: 100%;
-      background: #fff;
-      border-radius: 12px;
-      border: 2px solid #1f1f1f;
-      font-size: .9rem;
+      border: 2px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 8px;
+      margin-top: 10px;
       font-weight: 600;
-      line-height: 1.4;
-      padding: 10px 12px;
-      margin-top: 16px;
       cursor: pointer;
-      transition: all .15s ease;
-    }
-
-    .restart-btn:hover {
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      background: #f8f8f8;
+      background: rgba(255,255,255,0.7);
     }
 
     footer {
       text-align: center;
-      font-size: .7rem;
-      color: #888;
-      margin-top: 24px;
-      line-height: 1.4;
+      font-size: .75rem;
+      color: #777;
+      margin-top: 20px;
     }
+
+    /* ------------------------------
+       Xボタン部分（ガラス調）
+    ------------------------------ */
+    .sns-box {
+      text-align:center;
+      margin:40px 0 0;
+      background:rgba(255,255,255,0.6);
+      padding:16px 0;
+      border-radius:16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .sns-box a {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:#000;
+      color:#fff;
+      text-decoration:none;
+      font-weight:600;
+      font-size:0.9rem;
+      padding:10px 16px;
+      border-radius:9999px;
+      transition:all .2s ease;
+    }
+
+    .sns-box a:hover {
+      background:#1a1a1a;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
   </style>
 </head>
 <body>
   <div class="card">
     <header>
-      <h1>田中クイズ</h1>
-      <p class="subtitle">自己紹介を読んで、どれだけ分かったか挑戦してください。</p>
+      <div class="icon">
+        <!-- https://jp.freepik.com/free-photo/decorative-bokeh-lights-background_6038285.htm#fromView=keyword&page=1&position=3&uuid=d757c64e-2d5a-4929-ad89-0f3e772b266c&query=%E9%9D%92%E3%81%84%E8%83%8C%E6%99%AF -->
+        <img src="https://cdn.pixabay.com/photo/2021/03/19/17/44/cat-6107799_1280.jpg" alt="たなたなアイコン">
+      </div>
+      <h1>Tanaka Quiz ✨</h1>
+      <p class="subtitle">私のこと、どれだけ知ってる？</p>
     </header>
 
-    <!-- 自己紹介 -->
-    <section id="intro">
+    <section>
       <div class="section-title">PROFILE</div>
       <div class="profile-box">
-        <div class="profile-row">
-          <div class="profile-label">名前</div>
-          <div class="profile-value">田中</div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-label">仕事</div>
-          <div class="profile-value">不動産賃貸営業</div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-label">性格タイプ（MBTI）</div>
-          <div class="profile-value">ESFP-T</div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-label">血液型 / 星座</div>
-          <div class="profile-value">A型 / 双子座</div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-label">好きなもの</div>
-          <div class="profile-value">ゲーム、映画鑑賞、読書</div>
-        </div>
+        <div class="profile-row"><span class="profile-label">名前：</span><span class="profile-value">たなたな</span></div>
+        <div class="profile-row"><span class="profile-label">仕事：</span><span class="profile-value">不動産賃貸営業</span></div>
+        <div class="profile-row"><span class="profile-label">性格タイプ：</span><span class="profile-value">ESFP</span></div>
+        <div class="profile-row"><span class="profile-label">血液型 / 星座：</span><span class="profile-value">A型 / 双子座</span></div>
+        <div class="profile-row"><span class="profile-label">好きなもの：</span><span class="profile-value">オンラインゲーム、読書、映画鑑賞</span></div>
       </div>
     </section>
 
-    <!-- クイズ -->
-    <section id="quiz">
+    <section>
       <div class="section-title">QUIZ</div>
 
-      <!-- Q1 -->
       <div class="question-block" data-answer="B">
-        <div class="q-text">
-          <span class="q-badge">Q1</span>
-          <span>田中の仕事はどれ？</span>
-        </div>
+        <div class="q-text">Q1. 田中の仕事は？</div>
         <div class="choices">
-          <button data-choice="A">A. 自宅警備員</button>
+          <button data-choice="A">A. 公務員</button>
           <button data-choice="B">B. 不動産賃貸営業</button>
-          <button data-choice="C">C. 仕事戦士</button>
+          <button data-choice="C">C. インフルエンサー</button>
         </div>
         <div class="result-area"></div>
       </div>
 
-      <!-- Q2 -->
       <div class="question-block" data-answer="C">
-        <div class="q-text">
-          <span class="q-badge">Q2</span>
-          <span>田中が好きなものは？</span>
-        </div>
+        <div class="q-text">Q2. 好きなものは？</div>
         <div class="choices">
-          <button data-choice="A">A. 登山と筋トレ</button>
-          <button data-choice="B">B. 仕事</button>
+          <button data-choice="A">A. お仕事</button>
+          <button data-choice="B">B. フルマラソン</button>
           <button data-choice="C">C. 家から一歩も出ない休日</button>
         </div>
         <div class="result-area"></div>
       </div>
 
-      <!-- Q3 -->
       <div class="question-block" data-answer="A">
-        <div class="q-text">
-          <span class="q-badge">Q3</span>
-          <span>MBTIタイプは？</span>
-        </div>
+        <div class="q-text">Q3. MBTIタイプは？</div>
         <div class="choices">
-          <button data-choice="A">A. ESFP-T</button>
+          <button data-choice="A">A. ESFP</button>
           <button data-choice="B">B. INTJ</button>
           <button data-choice="C">C. INTP</button>
         </div>
         <div class="result-area"></div>
       </div>
-    </section>
 
-    <!-- スコア -->
-    <section id="score-area">
       <div id="final-wrapper">
         <div id="final-score"></div>
-        <div id="final-msg"></div>
       </div>
       <button class="restart-btn" id="restart">もう一回チャレンジ</button>
     </section>
 
-    <footer>
-      © 2025 Tanaka / self-introduction quiz
-    </footer>
+    <footer>© 2025 Tanaka / self-introduction quiz</footer>
+
+    <!-- ✕ボタン -->
+    <div class="sns-box">
+      <a href="https://x.com/Tanax5296" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+             viewBox="0 0 1200 1227">
+          <path d="M714 519 1160 0h-105L678 441 405 0H0l468 727L0 1227h105l406-455 291 455h405L714 519zM597 672l-47-69-368-528h159l296 423 47 69 392 559H916L597 672z"/>
+        </svg>
+        フォローする
+      </a>
+    </div>
   </div>
 
   <script>
@@ -369,50 +317,29 @@
       buttons.forEach(btn => {
         btn.addEventListener("click", () => {
           if (block.classList.contains("done")) return;
-
           const chosen = btn.getAttribute("data-choice");
 
-          // いったん全部リセット
-          buttons.forEach(b => {
-            b.classList.remove("correct","wrong");
-          });
+          buttons.forEach(b => b.classList.remove("correct","wrong"));
 
-          // 判定
           if (chosen === correctAnswer) {
-            resultArea.textContent = "正解です ✨";
-            resultArea.style.color = "#2f9e56";
             btn.classList.add("correct");
-            correctCount += 1;
+            resultArea.textContent = "正解！✨";
+            resultArea.style.color = "#2f9e56";
+            correctCount++;
           } else {
-            resultArea.textContent = "残念…プロフィールをもう一度チェック🫢";
-            resultArea.style.color = "#d12d55";
             btn.classList.add("wrong");
-            // 正解も表示でフォロー
-            const rightBtn = [...buttons].find(b => b.getAttribute("data-choice") === correctAnswer);
-            if (rightBtn) {
-              rightBtn.classList.add("correct");
-            }
+            resultArea.textContent = "不正解…💦";
+            resultArea.style.color = "#d12d55";
           }
 
           block.classList.add("done");
-          answeredCount += 1;
+          answeredCount++;
 
-          // 全問終わったらスコア発表
           if (answeredCount === questionBlocks.length) {
             const finalWrap = document.getElementById("final-wrapper");
             const finalScore = document.getElementById("final-score");
-            const finalMsg = document.getElementById("final-msg");
             const restartBtn = document.getElementById("restart");
-
             finalScore.textContent = `結果：${correctCount} / ${questionBlocks.length} 問 正解`;
-            if (correctCount === questionBlocks.length) {
-              finalMsg.textContent = "完璧。あなたは田中秘書認定です。";
-            } else if (correctCount === questionBlocks.length - 1) {
-              finalMsg.textContent = "惜しい！ほぼ合格ライン👏";
-            } else {
-              finalMsg.textContent = "まだ伸びしろあります。もっと私を見て？";
-            }
-
             finalWrap.style.display = "block";
             restartBtn.style.display = "block";
           }
@@ -420,30 +347,17 @@
       });
     });
 
-    // リスタート
     document.getElementById("restart").addEventListener("click", () => {
       answeredCount = 0;
       correctCount = 0;
-
-      const finalWrap = document.getElementById("final-wrapper");
-      const restartBtn = document.getElementById("restart");
-
-      finalWrap.style.display = "none";
-      restartBtn.style.display = "none";
-
+      document.getElementById("final-wrapper").style.display = "none";
+      document.getElementById("restart").style.display = "none";
       questionBlocks.forEach(block => {
         block.classList.remove("done");
-        const resultArea = block.querySelector(".result-area");
-        resultArea.textContent = "";
-        resultArea.style.color = "#2a2a2a";
-
-        const buttons = block.querySelectorAll("button");
-        buttons.forEach(b => {
-          b.classList.remove("correct","wrong");
-        });
+        block.querySelector(".result-area").textContent = "";
+        block.querySelectorAll("button").forEach(b => b.classList.remove("correct","wrong"));
       });
     });
   </script>
 </body>
 </html>
-
