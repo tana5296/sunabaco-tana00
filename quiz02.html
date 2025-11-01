@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>田中クイズ</title>
+  <style>
+    /* 画面全体の背景：やわらかいグラデ */
+    body {
+      font-family: "Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px;
+      background: radial-gradient(circle at 20% 20%, #fff7f7 0%, #ffeefc 30%, #f4f7ff 60%, #eef5ff 100%);
+      color: #2a2a2a;
+    }
+
+    /* 中央カード：ガラス風＋ふわっと影 */
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 28px 24px 32px;
+      box-shadow:
+        0 30px 60px rgba(0,0,0,0.08),
+        0 2px 4px rgba(0,0,0,0.06);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.6);
+      position: relative;
+    }
+
+    /* ちょっとした上部アクセントの細フチ */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.8) 0%,
+        rgba(255,255,255,0) 60%
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0 0 6px;
+      letter-spacing: .03em;
+    }
+
+    .subtitle {
+      font-size: .8rem;
+      color: #6b6b6b;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    section {
+      margin-bottom: 28px;
+    }
+
+    /* 見出しラベルっぽいデザイン */
+    .section-title {
+      font-size: .75rem;
+      font-weight: 600;
+      color: #777;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: linear-gradient(135deg,#ff86b5 0%,#a98bff 100%);
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(255,134,181,0.4);
+    }
+
+    /* 自己紹介ボックス */
+    .profile-box {
+      background: rgba(255,255,255,0.7);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.04);
+      padding: 16px 18px;
+      font-size: .9rem;
+      line-height: 1.5;
+      color: #2f2f2f;
+    }
+
+    .profile-row {
+      margin-bottom: 12px;
+    }
+    .profile-label {
+      font-size: .7rem;
+      font-weight: 600;
+      color: #868686;
+      letter-spacing: .04em;
+      margin-bottom: 2px;
+    }
+    .profile-value {
+      font-size: .95rem;
+      font-weight: 500;
+      color: #2a2a2a;
+    }
+
+    /* 質問ボックス */
+    .question-block {
+      background: rgba(255,255,255,0.7);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.05);
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-block.done {
+      opacity: .8;
+    }
+
+    .q-text {
+      font-size: .95rem;
+      font-weight: 600;
+      color: #1f1f1f;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      display: flex;
+      align-items: baseline;
+      gap: .5em;
+    }
+
+    .q-badge {
+      background: linear-gradient(135deg,#ff86b5 0%,#a98bff 100%);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 600;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 999px;
+      box-shadow: 0 8px 16px rgba(169,139,255,0.4);
+      white-space: nowrap;
+    }
+
+    .choices button {
+      width: 100%;
+      background: #fcfcfc;
+      border-radius: 12px;
+      border: 1px solid #dcdcdc;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: .9rem;
+      font-weight: 500;
+      line-height: 1.4;
+      text-align: left;
+      cursor: pointer;
+      color: #2a2a2a;
+      transition: all .15s ease;
+    }
+
+    .choices button:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+      background: #ffffff;
+    }
+
+    /* 正解・不正解のビジュアル */
+    .choices button.correct {
+      background: #ecfff4;
+      border-color: #49c679;
+      box-shadow: 0 8px 20px rgba(73,198,121,0.25);
+    }
+    .choices button.wrong {
+      background: #fff5f7;
+      border-color: #e55a7a;
+      box-shadow: 0 8px 20px rgba(229,90,122,0.22);
+    }
+
+    .result-area {
+      font-size: .8rem;
+      font-weight: 600;
+      min-height: 1.4em;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    /* スコア表示 */
+    #final-wrapper {
+      display: none;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      border-radius: 16px;
+      padding: 16px 18px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    #final-score {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    #final-msg {
+      font-size: .8rem;
+      color: #d2d2d2;
+      line-height: 1.4;
+    }
+
+    .restart-btn {
+      display: none;
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      border: 2px solid #1f1f1f;
+      font-size: .9rem;
+      font-weight: 600;
+      line-height: 1.4;
+      padding: 10px 12px;
+      margin-top: 16px;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+
+    .restart-btn:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      background: #f8f8f8;
+    }
+
+    footer {
+      text-align: center;
+      font-size: .7rem;
+      color: #888;
+      margin-top: 24px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <h1>田中クイズ</h1>
+      <p class="subtitle">自己紹介を読んで、どれだけ分かったか挑戦してください。</p>
+    </header>
+
+    <!-- 自己紹介 -->
+    <section id="intro">
+      <div class="section-title">PROFILE</div>
+      <div class="profile-box">
+        <div class="profile-row">
+          <div class="profile-label">名前</div>
+          <div class="profile-value">田中</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">仕事</div>
+          <div class="profile-value">不動産賃貸営業</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">性格タイプ（MBTI）</div>
+          <div class="profile-value">ESFP-T</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">血液型 / 星座</div>
+          <div class="profile-value">A型 / 双子座</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">好きなもの</div>
+          <div class="profile-value">ゲーム、映画鑑賞、読書</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- クイズ -->
+    <section id="quiz">
+      <div class="section-title">QUIZ</div>
+
+      <!-- Q1 -->
+      <div class="question-block" data-answer="B">
+        <div class="q-text">
+          <span class="q-badge">Q1</span>
+          <span>田中の仕事はどれ？</span>
+        </div>
+        <div class="choices">
+          <button data-choice="A">A. 自宅警備員</button>
+          <button data-choice="B">B. 不動産賃貸営業</button>
+          <button data-choice="C">C. 仕事戦士</button>
+        </div>
+        <div class="result-area"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="question-block" data-answer="C">
+        <div class="q-text">
+          <span class="q-badge">Q2</span>
+          <span>田中が好きなものは？</span>
+        </div>
+        <div class="choices">
+          <button data-choice="A">A. 登山と筋トレ</button>
+          <button data-choice="B">B. 仕事</button>
+          <button data-choice="C">C. 家から一歩も出ない休日</button>
+        </div>
+        <div class="result-area"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="question-block" data-answer="A">
+        <div class="q-text">
+          <span class="q-badge">Q3</span>
+          <span>MBTIタイプは？</span>
+        </div>
+        <div class="choices">
+          <button data-choice="A">A. ESFP-T</button>
+          <button data-choice="B">B. INTJ</button>
+          <button data-choice="C">C. INTP</button>
+        </div>
+        <div class="result-area"></div>
+      </div>
+    </section>
+
+    <!-- スコア -->
+    <section id="score-area">
+      <div id="final-wrapper">
+        <div id="final-score"></div>
+        <div id="final-msg"></div>
+      </div>
+      <button class="restart-btn" id="restart">もう一回チャレンジ</button>
+    </section>
+
+    <footer>
+      © 2025 Tanaka / self-introduction quiz
+    </footer>
+  </div>
+
+  <script>
+    const questionBlocks = document.querySelectorAll(".question-block");
+    let answeredCount = 0;
+    let correctCount = 0;
+
+    questionBlocks.forEach(block => {
+      const correctAnswer = block.getAttribute("data-answer");
+      const buttons = block.querySelectorAll("button");
+      const resultArea = block.querySelector(".result-area");
+
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (block.classList.contains("done")) return;
+
+          const chosen = btn.getAttribute("data-choice");
+
+          // いったん全部リセット
+          buttons.forEach(b => {
+            b.classList.remove("correct","wrong");
+          });
+
+          // 判定
+          if (chosen === correctAnswer) {
+            resultArea.textContent = "正解です ✨";
+            resultArea.style.color = "#2f9e56";
+            btn.classList.add("correct");
+            correctCount += 1;
+          } else {
+            resultArea.textContent = "残念…プロフィールをもう一度チェック🫢";
+            resultArea.style.color = "#d12d55";
+            btn.classList.add("wrong");
+            // 正解も表示でフォロー
+            const rightBtn = [...buttons].find(b => b.getAttribute("data-choice") === correctAnswer);
+            if (rightBtn) {
+              rightBtn.classList.add("correct");
+            }
+          }
+
+          block.classList.add("done");
+          answeredCount += 1;
+
+          // 全問終わったらスコア発表
+          if (answeredCount === questionBlocks.length) {
+            const finalWrap = document.getElementById("final-wrapper");
+            const finalScore = document.getElementById("final-score");
+            const finalMsg = document.getElementById("final-msg");
+            const restartBtn = document.getElementById("restart");
+
+            finalScore.textContent = `結果：${correctCount} / ${questionBlocks.length} 問 正解`;
+            if (correctCount === questionBlocks.length) {
+              finalMsg.textContent = "完璧。あなたは田中秘書認定です。";
+            } else if (correctCount === questionBlocks.length - 1) {
+              finalMsg.textContent = "惜しい！ほぼ合格ライン👏";
+            } else {
+              finalMsg.textContent = "まだ伸びしろあります。もっと私を見て？";
+            }
+
+            finalWrap.style.display = "block";
+            restartBtn.style.display = "block";
+          }
+        });
+      });
+    });
+
+    // リスタート
+    document.getElementById("restart").addEventListener("click", () => {
+      answeredCount = 0;
+      correctCount = 0;
+
+      const finalWrap = document.getElementById("final-wrapper");
+      const restartBtn = document.getElementById("restart");
+
+      finalWrap.style.display = "none";
+      restartBtn.style.display = "none";
+
+      questionBlocks.forEach(block => {
+        block.classList.remove("done");
+        const resultArea = block.querySelector(".result-area");
+        resultArea.textContent = "";
+        resultArea.style.color = "#2a2a2a";
+
+        const buttons = block.querySelectorAll("button");
+        buttons.forEach(b => {
+          b.classList.remove("correct","wrong");
+        });
+      });
+    });
+  </script>
+</body>
+</html>
